@@ -43,7 +43,7 @@ void dbg(const char* tipo, String msg) {
 #define UART2_RX 26  // etiqueta D2 en tu placa
 HardwareSerial ComBoard(2); // UART2
 
-const unsigned long TURN_DURATION_MS = 3450;
+const unsigned long TURN_DURATION_MS = 3500;
 
 //==================================================
 // LEDS

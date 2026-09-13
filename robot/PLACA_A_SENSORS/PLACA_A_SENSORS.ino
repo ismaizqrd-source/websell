@@ -56,7 +56,7 @@ HardwareSerial ComBoard(2); // UART2
 //==================================================
 // DURACION DEL GIRO Y TIMEOUT DE SEGURIDAD
 //==================================================
-const unsigned long TURN_DURATION_MS = 3450;
+const unsigned long TURN_DURATION_MS = 3500;
 const unsigned long TURN_TIMEOUT_MS = TURN_DURATION_MS + 3000;
 
 //==================================================
