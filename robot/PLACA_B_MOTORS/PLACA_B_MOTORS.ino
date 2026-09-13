@@ -1,4 +1,5 @@
-//==================================================
+
+//==================================================
 // PLACA B - MOTORES Y LEDS  (v5 - con debug)
 //==================================================
 // Placa: Keyestudio ESP32 Plus STEAMakers
@@ -42,7 +43,7 @@ void dbg(const char* tipo, String msg) {
 #define UART2_RX 26  // etiqueta D2 en tu placa
 HardwareSerial ComBoard(2); // UART2
 
-const unsigned long TURN_DURATION_MS = 5000;
+const unsigned long TURN_DURATION_MS = 3450;
 
 //==================================================
 // LEDS
@@ -154,7 +155,7 @@ void buidarBufferUART() {
 
 void esquerra() {
 
-  dbg("MOTOR", "Girando IZQUIERDA (5000ms)");
+  dbg("MOTOR", String("Girando IZQUIERDA (") + TURN_DURATION_MS + "ms)");
 
   digitalWrite(ENA, HIGH);
   digitalWrite(IN1, LOW);
@@ -183,7 +184,7 @@ void esquerra() {
 
 void dreta() {
 
-  dbg("MOTOR", "Girando DERECHA (5000ms)");
+  dbg("MOTOR", String("Girando DERECHA (") + TURN_DURATION_MS + "ms)");
 
   digitalWrite(ENA, HIGH);
   digitalWrite(IN1, HIGH);

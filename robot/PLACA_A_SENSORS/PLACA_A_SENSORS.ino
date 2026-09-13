@@ -1,4 +1,5 @@
-//==================================================
+
+//==================================================
 // PLACA A - SENSORES, SERVO, OLED, SPIFFS  (v5 - con debug)
 //==================================================
 // Placa: Keyestudio ESP32 Plus STEAMakers
@@ -55,7 +56,7 @@ HardwareSerial ComBoard(2); // UART2
 //==================================================
 // DURACION DEL GIRO Y TIMEOUT DE SEGURIDAD
 //==================================================
-const unsigned long TURN_DURATION_MS = 5000;
+const unsigned long TURN_DURATION_MS = 3450;
 const unsigned long TURN_TIMEOUT_MS = TURN_DURATION_MS + 3000;
 
 //==================================================
@@ -320,7 +321,7 @@ void setup() {
     dbg("BOOT", "SPIFFS OK");
   }
 
-  dbg("BOOT", "Setup completo. Umbral deteccion = 30cm. Giro = 5000ms.");
+  dbg("BOOT", String("Setup completo. Umbral deteccion = ") + LLINDAR_CM + "cm. Giro = " + TURN_DURATION_MS + "ms.");
 
   delay(2000);
 }
