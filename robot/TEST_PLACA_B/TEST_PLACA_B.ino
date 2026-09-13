@@ -47,6 +47,7 @@ void menu() {
   Serial.println(" 5 = GIROS      (izquierda y derecha)");
   Serial.println(" 6 = UART       (escuchar a la Placa A)");
   Serial.println(" 7 = ECO        (devolver lo que llegue)");
+  Serial.println(" 8 = CALIBRAR   (ajustar los grados del giro)");
   Serial.println(" 0 = PARAR TODO");
   Serial.println(" m = volver a mostrar este menu");
   Serial.println("====================================");
@@ -269,6 +270,72 @@ void testEco() {
 }
 
 //==================================================
+// 8 - CALIBRAR EL GIRO
+//==================================================
+// El giro se mide en TIEMPO, no en grados. Cuantos grados
+// salen de X milisegundos depende de las pilas, del suelo
+// y del agarre de las ruedas. Esta prueba te da el numero.
+//==================================================
+long leerNumero(const char* pregunta, long minimo, long maximo) {
+  Serial.print(pregunta);
+  Serial.setTimeout(60000);
+  long v = Serial.parseInt();
+  Serial.setTimeout(1000);
+  while (Serial.available()) Serial.read();
+  Serial.println(v);
+  if (v < minimo || v > maximo) {
+    Serial.print("  valor fuera de rango (");
+    Serial.print(minimo); Serial.print(" a "); Serial.print(maximo);
+    Serial.println("), cancelo");
+    return -1;
+  }
+  return v;
+}
+
+void calibrarGiro() {
+  Serial.println("\n--- CALIBRAR EL GIRO ---");
+  Serial.println("IMPORTANTE: el robot va EN EL SUELO, no con las ruedas al aire.");
+  Serial.println("Las pilas deben estar como las vas a usar el dia de la");
+  Serial.println("presentacion: si las cambias, hay que recalibrar.");
+  Serial.println();
+  Serial.println("Marca con cinta por donde mira el robot ahora.");
+
+  long ms = leerNumero("Milisegundos de giro a probar (empieza por 5000): ", 200, 15000);
+  if (ms < 0) return;
+
+  Serial.println("Girando a la DERECHA en 3 segundos...");
+  delay(3000);
+
+  digitalWrite(groc, HIGH);
+  digitalWrite(ENA, HIGH); digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);
+  digitalWrite(ENB, HIGH); digitalWrite(IN3, LOW);  digitalWrite(IN4, HIGH);
+  delay(ms);
+  motoresParados();
+  ledsApagados();
+
+  Serial.println("Hecho. Mide con un transportador cuanto ha girado.");
+  long graus = leerNumero("Grados que ha girado de verdad: ", 5, 720);
+  if (graus < 0) return;
+
+  long sugerido = (ms * 90L) / graus;
+
+  Serial.println("RESULTADO:");
+  Serial.print("  "); Serial.print(ms); Serial.print(" ms  ->  ");
+  Serial.print(graus); Serial.println(" grados");
+  Serial.print("  Para 90 grados necesitas unos ");
+  Serial.print(sugerido);
+  Serial.println(" ms");
+  Serial.println();
+  Serial.println("  Cambia TURN_DURATION_MS a ese valor en los DOS sketches:");
+  Serial.println("    PLACA_B_MOTORS  -> es el que mueve los motores");
+  Serial.println("    PLACA_A_SENSORS -> su timeout debe seguir siendo mayor");
+  Serial.println();
+  Serial.println("  Repite la prueba 2 o 3 veces: si sale un numero muy");
+  Serial.println("  distinto cada vez, el problema no es el tiempo, son las");
+  Serial.println("  ruedas patinando o las pilas justas.");
+}
+
+//==================================================
 void setup() {
   Serial.begin(9600);
   delay(500);
@@ -302,6 +369,7 @@ void loop() {
     case '5': testGiros(); break;
     case '6': testUART();  break;
     case '7': testEco();   break;
+    case '8': calibrarGiro(); break;
     case '0':
       motoresParados();
       ledsApagados();

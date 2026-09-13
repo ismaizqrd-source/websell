@@ -82,6 +82,40 @@ y algo falla, no sabras si es el componente, el cable o el codigo.
 
 ---
 
+## Calibrar el giro
+
+El robot no gira "90 grados": gira **durante 5000 ms** y para donde le pille.
+Los grados que salen dependen de las pilas, del suelo y del agarre de las
+ruedas, asi que hay que medirlos.
+
+Usa la **opcion 8 de TEST_PLACA_B**, con el robot **en el suelo** (no con
+las ruedas al aire, ahi el angulo no significa nada). Te pide los
+milisegundos, gira, te pregunta cuantos grados ha girado de verdad y te
+calcula el valor para 90 grados.
+
+La cuenta es una regla de tres:
+
+    ms_para_90 = ms_probados * 90 / grados_medidos
+
+Ejemplos con los 5000 ms de partida:
+
+| Si gira... | Para 90 grados pon |
+|---|---|
+| 120 grados (se pasa) | 3750 ms |
+| 105 grados | 4285 ms |
+| 75 grados (se queda corto) | 6000 ms |
+
+El valor que manda es el `TURN_DURATION_MS` de **PLACA_B_MOTORS**, que es
+quien mueve los motores. En **PLACA_A_SENSORS** cambialo tambien: alli solo
+sirve para calcular `TURN_TIMEOUT_MS`, que debe seguir siendo mayor que la
+duracion real del giro.
+
+Repite la medida 2 o 3 veces. Si cada vez sale un numero muy distinto, el
+problema no es el tiempo: son las ruedas patinando o las pilas justas, y
+entonces calibrar no sirve de nada porque manana volvera a cambiar.
+
+---
+
 ## Cosas a revisar en el codigo final
 
 Detectadas al leer los dos sketches, ninguna impide que funcione:
